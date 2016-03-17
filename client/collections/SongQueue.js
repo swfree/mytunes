@@ -1,20 +1,26 @@
 // SongQueue.js - Defines a backbone model class for the song queue.
 var SongQueue = Songs.extend({
 
-  queuedSongs: [],
   initialize: function() {
-    this.on('enqueue', this.enqueue);
-    this.on('ended', this.remove, this);
+    this.on('ended', this.ended, this);
+    this.on('add', this.plus, this);
+    this.on('dequeue', this.dequeue, this);
   },
 
-  add: function(newSong) {
+  plus: function(newSong) {
+    console.log(this.length);
+
     // console.log(this.model.get('songQueue'));
     // this.get('storeSongQueue');
 
-    var model = new SongModel(songData);
+    // var model = new SongModel({
+    //   artist: 'Fakey McFakerson',
+    //   title: 'Never Gonna Mock You Up',
+    //   url: 'example/url',
+    // });
 
-    this.queuedSongs.push(model);
-    if (this.queuedSongs.length === 1) {
+    // this.queuedSongs.push(model);
+    if (this.length === 1) {
       this.playFirst();
       
     }
@@ -27,10 +33,6 @@ var SongQueue = Songs.extend({
     // move up next song
   },
 
-  remove: function() {
-    this.queuedSongs.splice(0, 1);
-  },
-
   // this.queuedSongs.on('ended', this)
     // this.queuedSongs.splice(0)
 
@@ -38,6 +40,16 @@ var SongQueue = Songs.extend({
 
   },
 
-  playFirst: function() {}
+  ended: function() {
+    console.log('inside Ended function');
+    this.remove(this.at(0));
+    if (this.length >= 1 ) {
+      this.playFirst();
+    }
+  },
+
+  playFirst: function() {
+    this.at(0).play();
+  }
 
 });
